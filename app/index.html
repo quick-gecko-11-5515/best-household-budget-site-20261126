@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hearthbook — Household Budget for The Hartono Family</title>
+  <meta name="description" content="Offline-ready household budget workspace for tracking family income, monthly category budgets, savings goals, recurring bills, and 50/30/20 insights.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2318362D'/%3E%3Cpath d='M7 15.5L16 8l9 7.5V24a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-8.5z' fill='%23E7F4EE'/%3E%3Crect x='13' y='17' width='6' height='8' rx='1' fill='%23E09A34'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="brand-block">
+        <a href="#/dashboard" class="brand-link">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 28 28" width="26" height="26" fill="none">
+              <rect width="28" height="28" rx="7" fill="#E7F4EE" fill-opacity="0.14"/>
+              <path d="M6 13.5L14 7l8 6.5V21a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-7.5z" fill="#E7F4EE"/>
+              <rect x="11.5" y="15" width="5" height="7" rx="1" fill="#E09A34"/>
+            </svg>
+          </span>
+          <span>
+            <strong class="brand-name">Hearthbook</strong>
+            <span class="brand-sub">Family Budget</span>
+          </span>
+        </a>
+        <button type="button" class="btn btn-amber btn-sm mobile-add-btn" id="mobile-add-btn">+ Add</button>
+      </div>
+
+      <div class="household-pill" id="household-pill">
+        <div class="household-title">The Hartono Family</div>
+        <div class="household-meta">November 2026 &middot; Day 21 of 30</div>
+      </div>
+
+      <nav class="nav-list" id="main-nav" aria-label="Budget sections">
+        <a href="#/dashboard" class="nav-link" data-route="dashboard">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1.2"/><rect x="11" y="3" width="6" height="6" rx="1.2"/><rect x="3" y="11" width="6" height="6" rx="1.2"/><rect x="11" y="11" width="6" height="6" rx="1.2"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#/transactions" class="nav-link" data-route="transactions">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h12M4 10h12M4 14h8"/></svg>
+          <span>Transactions</span>
+        </a>
+        <a href="#/budgets" class="nav-link" data-route="budgets">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 15V9m4 6V5m4 10v-4m4 4V7"/></svg>
+          <span>Budgets</span>
+        </a>
+        <a href="#/goals" class="nav-link" data-route="goals">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><circle cx="10" cy="10" r="3"/><circle cx="10" cy="10" r="1" fill="currentColor"/></svg>
+          <span>Goals</span>
+        </a>
+        <a href="#/bills" class="nav-link" data-route="bills">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="4.5" width="13" height="12" rx="1.8"/><path d="M7 3v3m6-3v3M3.5 8.5h13"/></svg>
+          <span>Bills</span>
+        </a>
+        <a href="#/reports" class="nav-link" data-route="reports">
+          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 3.5A6.5 6.5 0 1 0 16.5 10H10V3.5z"/><path d="M12.5 3.8A6.5 6.5 0 0 1 16.2 7.5H12.5V3.8z"/></svg>
+          <span>Reports</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-actions">
+        <button type="button" class="btn btn-amber btn-block" id="sidebar-add-btn">+ Add Transaction</button>
+        <div class="sidebar-summary" id="sidebar-summary"></div>
+        <button type="button" class="btn-link-muted" id="reset-demo-btn">Reset sample data</button>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <main id="view-root" class="view-root" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="quick-modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head">
+        <h2 id="modal-title">Add Household Transaction</h2>
+        <button type="button" class="icon-close" id="close-modal-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="quick-tx-form" class="form-grid">
+        <label class="field">
+          <span>Type</span>
+          <select name="type" id="q-type">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Date</span>
+          <input type="date" name="date" id="q-date" value="2026-11-21" required>
+        </label>
+        <label class="field field-full">
+          <span>Description</span>
+          <input type="text" name="description" id="q-description" placeholder="e.g. FreshMart Weekly Groceries" required>
+        </label>
+        <label class="field">
+          <span>Category</span>
+          <select name="category" id="q-category"></select>
+        </label>
+        <label class="field">
+          <span>Amount ($)</span>
+          <input type="number" name="amount" id="q-amount" min="0.01" step="0.01" placeholder="45.00" required>
+        </label>
+        <label class="field">
+          <span>Member</span>
+          <select name="member" id="q-member">
+            <option value="Joint">Joint</option>
+            <option value="Maya">Maya</option>
+            <option value="Budi">Budi</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Note (optional)</span>
+          <input type="text" name="note" id="q-note" placeholder="Short note">
+        </label>
+        <div class="modal-foot field-full">
+          <button type="button" class="btn btn-ghost" id="cancel-modal-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
